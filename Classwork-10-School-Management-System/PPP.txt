@@ -1,0 +1,217 @@
+# PPP
+
+**Classwork 10**
+
+# --- PROCESO: Configurar todos los datos del sistema ---
+
+# Crear diccionario de usuarios con los 8 usuarios (6 alumnos, 1 maestro, 1 coordinador)
+
+usuarios <- {
+'jperez'      : contraseña='1234', rol='alumno',      nombre='Juan Perez',
+'amartin'     : contraseña='1234', rol='alumno',      nombre='Ana Martin',
+'ltrochez'    : contraseña='1234', rol='alumno',      nombre='Luisa Trochez',
+'adiaz'       : contraseña='1234', rol='alumno',      nombre='Abraham Díaz',
+'sescamilla'  : contraseña='1234', rol='alumno',      nombre='Stephan Escamilla',
+'jrojas'      : contraseña='1234', rol='alumno',      nombre='Jesse Rojas',
+'mlopez'      : contraseña='1234', rol='maestro',     nombre='Maria Lopez',
+'rgarcia'     : contraseña='1234', rol='coordinador', nombre='Rosa Garcia'
+}
+
+# Crear tupla de materias (fija durante toda la ejecución)
+
+materias <- (
+'Matematicas',
+'Programación',
+'Ingles II',
+'Social-Emotional Skills',
+'Arquitectura',
+'Calculo'
+)
+
+# Crear diccionario de calificaciones para cada alumno
+
+calificaciones <- {
+'jperez' : {
+Matematicas: 9.0,
+Programación: 8.7,
+Ingles II: 8.5,
+Social-Emotional Skills: 7.0,
+Arquitectura: 6.5,
+Calculo: 8.8
+},
+
+```
+'amartin' : {
+    Matematicas: 9.0,
+    Programación: 8.0,
+    Ingles II: 7.5,
+    Social-Emotional Skills: 9.0,
+    Arquitectura: 8.2,
+    Calculo: 8.9
+},
+
+'ltrochez' : {
+    Matematicas: 10.0,
+    Programación: 8.9,
+    Ingles II: 8.9,
+    Social-Emotional Skills: 9.0,
+    Arquitectura: 9.4,
+    Calculo: 9.2
+},
+
+'adiaz' : {
+    Matematicas: 9.0,
+    Programación: 9.7,
+    Ingles II: 9.5,
+    Social-Emotional Skills: 9.0,
+    Arquitectura: 8.9,
+    Calculo: 9.8
+},
+
+'sescamilla' : {
+    Matematicas: 9.0,
+    Programación: 8.7,
+    Ingles II: 8.5,
+    Social-Emotional Skills: 7.0,
+    Arquitectura: 8.0,
+    Calculo: 8.6
+},
+
+'jrojas' : {
+    Matematicas: 9.0,
+    Programación: 8.7,
+    Ingles II: 8.5,
+    Social-Emotional Skills: 6.0,
+    Arquitectura: 7.5,
+    Calculo: 8.4
+}
+```
+
+}
+
+============================================================
+
+# --- CICLO DE LOGIN ---
+
+============================================================
+
+# PROCESO: Inicializar las variables necesarias
+
+logged_in <- Falso
+usuario_actual <- vacío
+rol <- vacío
+nombre <- vacío
+
+# PROCESO: Solicitar credenciales hasta que sean correctas
+
+MIENTRAS logged_in sea igual a Falso HACER
+
+```
+usuario_actual <- pedir al usuario "Usuario: "
+contraseña <- pedir al usuario "Contraseña: "
+
+SI usuario_actual está en usuarios Y usuarios[usuario_actual][contraseña] es igual a contraseña ENTONCES
+
+    logged_in <- Verdadero
+    rol <- usuarios[usuario_actual][rol]
+    nombre <- usuarios[usuario_actual][nombre]
+
+SINO
+
+    imprimir "Usuario o contraseña incorrectos. Intente nuevamente."
+
+FIN SI
+```
+
+FIN MIENTRAS
+
+# SALIDA
+
+imprimir "Bienvenido, " + nombre + " (" + rol + ")"
+
+============================================================
+
+# --- RAMIFICACIÓN POR ROL ---
+
+============================================================
+
+SI rol es igual a "alumno" ENTONCES
+
+```
+imprimir "Boleta de " + nombre
+
+aprobadas <- conjunto vacío
+
+PARA CADA materia EN materias HACER
+
+    calificacion <- calificaciones[usuario_actual][materia]
+
+    imprimir materia + ": " + calificacion
+
+    SI calificacion >= 8.0 ENTONCES
+        agregar materia a aprobadas
+    FIN SI
+
+FIN PARA
+
+pendientes <- conjunto(materias) menos aprobadas
+
+imprimir "Materias aprobadas: " + aprobadas
+imprimir "Materias pendientes: " + pendientes
+```
+
+SINO SI rol es igual a "maestro" ENTONCES
+
+```
+imprimir "Lista de alumnos:"
+
+PARA CADA usuario EN usuarios HACER
+
+    SI usuarios[usuario][rol] es igual a "alumno" ENTONCES
+        imprimir usuario + " - " + usuarios[usuario][nombre]
+    FIN SI
+
+FIN PARA
+
+alumno_sel <- pedir al usuario "Alumno (username): "
+materia_sel <- pedir al usuario "Materia: "
+nueva_cal <- pedir al usuario "Nueva calificación: " (convertir a decimal)
+
+calificaciones[alumno_sel][materia_sel] <- nueva_cal
+
+imprimir "Calificación actualizada."
+```
+
+SINO SI rol es igual a "coordinador" ENTONCES
+
+```
+imprimir "=== MAESTROS ==="
+
+PARA CADA usuario EN usuarios HACER
+
+    SI usuarios[usuario][rol] es igual a "maestro" ENTONCES
+        imprimir usuario + " - " + usuarios[usuario][nombre]
+    FIN SI
+
+FIN PARA
+
+imprimir "=== MATERIAS ==="
+
+PARA CADA materia EN materias HACER
+    imprimir materia
+FIN PARA
+
+imprimir "=== ALUMNOS Y CALIFICACIONES ==="
+
+PARA CADA alumno EN calificaciones HACER
+
+    imprimir usuarios[alumno][nombre] + " (" + alumno + "):"
+
+    PARA CADA materia EN materias HACER
+        imprimir "  " + materia + ": " + calificaciones[alumno][materia]
+    FIN PARA
+
+FIN PARA
+```
+
+FIN SI
