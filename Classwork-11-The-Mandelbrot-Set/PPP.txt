@@ -1,0 +1,61 @@
+# Classwork 11 - The Mandelbrot Set
+# Pseudocode (PPP)
+
+START
+
+# Step 1: Read the configuration file into a dictionary
+CREATE empty dictionary configuration
+OPEN file "config.txt" for reading
+
+FOR each line IN file
+    SPLIT line at "=" INTO key and value
+
+    IF value contains a decimal point THEN
+        configuration at key <- value converted to decimal number
+    ELSE
+        configuration at key <- value converted to whole number
+    END IF
+END FOR
+
+CLOSE file
+
+# Step 2: Extract grid dimensions and iteration limit
+grid_width <- configuration value for "ancho"
+grid_height <- configuration value for "alto"
+maximum_iterations <- configuration value for "max_iter"
+
+# Step 3: Prepare the output file
+OPEN file "mandelbrot.csv" for writing
+WRITE "row,column,iterations" to output file
+
+# Step 4: Process every point in the grid
+FOR current_row <- 0 TO grid_height - 1
+    FOR current_column <- 0 TO grid_width - 1
+
+        # Step 5: Convert the grid position to a complex number
+        real_coordinate <- real_min + (current_column / grid_width) * (real_max - real_min)
+        imaginary_coordinate <- imag_min + (current_row / grid_height) * (imag_max - imag_min)
+        complex_number <- complex number made of real_coordinate and imaginary_coordinate
+
+        # Step 6: Apply the escape-time algorithm
+        current_value <- 0 + 0i
+        iteration_count <- 0
+
+        WHILE magnitude of current_value is less than or equal to 2
+              AND iteration_count < maximum_iterations
+
+            current_value <- current_value * current_value + complex_number
+            iteration_count <- iteration_count + 1
+
+        END WHILE
+
+        # Step 7: Save the result
+        WRITE current_row, current_column, iteration_count to output file
+
+    END FOR
+END FOR
+
+# Step 8: Close the output file
+CLOSE output file
+
+END
