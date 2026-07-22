@@ -1,0 +1,146 @@
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Show the list before sorting.
+Find the length of the list.
+Repeat a pass through the list.
+Compare each number with the number next to it.
+If the left number is greater than the right number, swap them.
+After every pass, ignore the numbers that are already in their final position.
+Continue until the entire list is sorted.
+
+OUTPUT
+Show the sorted list.
+
+END
+
+____________________________________________________________________________________
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Show the list before sorting.
+Find the length of the list.
+Start at the first unsorted position.
+Assume the number in that position is the smallest.
+Compare it with every number after it.
+If a smaller number is found, remember its position.
+Swap the smallest number with the first number of the unsorted section.
+Move to the next position.
+Continue until the entire list is sorted.
+
+OUTPUT
+Show the sorted list.
+
+END
+
+____________________________________________________________________________________
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Show the list before sorting.
+Find the length of the list.
+Start with the second number.
+Save the current number.
+Compare it with the numbers before it.
+Move every greater number one position to the right.
+Insert the saved number in its correct position.
+Move to the next number.
+Continue until the entire list is sorted.
+
+OUTPUT
+Show the sorted list.
+
+END
+
+____________________________________________________________________________________
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Configure the drawing window.
+Set the horizontal and vertical scales.
+Draw every number as a blue bar.
+Repeat a pass through the list.
+Select two neighboring bars.
+Draw the selected bars in red.
+Compare their values.
+If the left value is greater than the right value, swap them.
+Draw the bars again after the swap.
+Continue until the list is sorted.
+Draw all bars in their final order.
+
+OUTPUT
+Show the Bubble Sort animation.
+Keep the final sorted list visible.
+
+END
+
+____________________________________________________________________________________
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Configure the drawing window.
+Set the horizontal and vertical scales.
+Draw every number as a blue bar.
+Start at the first unsorted position.
+Assume its value is the smallest.
+Compare the current smallest value with every value after it.
+Draw the two values being compared in red.
+Remember the position of every new smallest value.
+Swap the smallest value with the first value of the unsorted section.
+Draw the sorted section in green.
+Move to the next unsorted position.
+Continue until the entire list is sorted.
+
+OUTPUT
+Show the Selection Sort animation.
+Keep the final sorted list visible.
+
+END
+
+____________________________________________________________________________________
+
+START
+
+INPUT
+Generate a list of 10 random numbers from 0 to 100.
+
+PROCESS
+Configure the drawing window.
+Set the horizontal and vertical scales.
+Draw every number as a blue bar.
+Start with the second number.
+Save the current value.
+Draw the current bar in red.
+Compare it with the values before it.
+Move every greater value one position to the right.
+Draw each movement.
+Insert the saved value in its correct position.
+Draw the sorted section in green.
+Move to the next value.
+Continue until the entire list is sorted.
+
+OUTPUT
+Show the Insertion Sort animation.
+Keep the final sorted list visible.
+
+END
