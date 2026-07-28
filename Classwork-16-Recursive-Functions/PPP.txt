@@ -1,0 +1,385 @@
+===============================================================================
+ PPP - PSEUDOCODE PROGRAMMING PROCESS
+ Jorge Guillermo Farfan Zapata
+===============================================================================
+
+
+-------------------------------------------------------------------------------
+ SHARED VALIDATION ROUTINES
+-------------------------------------------------------------------------------
+
+ROUTINE es_entero(valor)
+    IF valor is of type integer AND valor is NOT of type boolean THEN
+        RETURN TRUE
+    ELSE
+        RETURN FALSE
+    END IF
+END ROUTINE
+
+ROUTINE es_numero(valor)
+    IF (valor is integer OR valor is float) AND valor is NOT boolean THEN
+        RETURN TRUE
+    ELSE
+        RETURN FALSE
+    END IF
+END ROUTINE
+
+ROUTINE validar_entero_no_negativo(valor, nombre)
+    IF NOT es_entero(valor) THEN
+        THROW TypeError "nombre must be an integer"
+    END IF
+    IF valor < 0 THEN
+        THROW ValueError "nombre must be >= 0"
+    END IF
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 1. recursiva(n)
+-------------------------------------------------------------------------------
+ INPUT          : n = integer >= 0
+ OUTPUT         : the text "Done!", or NULL if the input is invalid
+ BASE CASE      : n = 0
+ RECURSIVE CASE : _recursiva(n - 1)
+
+ROUTINE _recursiva(n)
+    IF n = 0 THEN
+        RETURN "Done!"
+    ELSE
+        PRINT n
+        RETURN _recursiva(n - 1)
+    END IF
+END ROUTINE
+
+ROUTINE recursiva(n)
+    TRY
+        CALL validar_entero_no_negativo(n, "n")
+        RETURN _recursiva(n)
+    CATCH TypeError OR ValueError AS error
+        PRINT "[ERROR] recursiva: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] recursiva: recursion limit reached"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 2. fibonacci(n)
+-------------------------------------------------------------------------------
+ INPUT          : n = integer >= 0
+ OUTPUT         : an integer, or NULL if the input is invalid
+ BASE CASE      : n = 0 or n = 1
+ RECURSIVE CASE : _fibonacci(n - 1) + _fibonacci(n - 2)
+
+ROUTINE _fibonacci(n, memoria)
+    IF n exists inside memoria THEN
+        RETURN memoria[n]
+    END IF
+    IF n = 0 OR n = 1 THEN
+        RETURN n
+    END IF
+    resultado <- _fibonacci(n - 1, memoria) + _fibonacci(n - 2, memoria)
+    memoria[n] <- resultado
+    RETURN resultado
+END ROUTINE
+
+ROUTINE fibonacci(n)
+    TRY
+        CALL validar_entero_no_negativo(n, "n")
+        RETURN _fibonacci(n, empty dictionary)
+    CATCH TypeError OR ValueError AS error
+        PRINT "[ERROR] fibonacci: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] fibonacci: recursion limit reached"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 3. factorial(n)
+-------------------------------------------------------------------------------
+ INPUT          : n = integer >= 0
+ OUTPUT         : an integer, or NULL if the input is invalid
+ BASE CASE      : n = 0 or n = 1
+ RECURSIVE CASE : _factorial(n - 1) * n
+
+ROUTINE _factorial(n)
+    IF n = 0 OR n = 1 THEN
+        RETURN 1
+    ELSE
+        RETURN _factorial(n - 1) * n
+    END IF
+END ROUTINE
+
+ROUTINE factorial(n)
+    TRY
+        CALL validar_entero_no_negativo(n, "n")
+        RETURN _factorial(n)
+    CATCH TypeError OR ValueError AS error
+        PRINT "[ERROR] factorial: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] factorial: recursion limit reached"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 4. multiplicacion_recursiva(n, m)
+-------------------------------------------------------------------------------
+ INPUT          : n = any number, m = integer
+ OUTPUT         : a number, or NULL if the input is invalid
+ BASE CASE      : m = 0
+ RECURSIVE CASE : _multiplicacion_recursiva(n, m - 1) + n
+
+ROUTINE _multiplicacion_recursiva(n, m)
+    IF m = 0 THEN
+        RETURN 0
+    ELSE
+        RETURN _multiplicacion_recursiva(n, m - 1) + n
+    END IF
+END ROUTINE
+
+ROUTINE multiplicacion_recursiva(n, m)
+    TRY
+        IF NOT es_numero(n) THEN
+            THROW TypeError "n must be a number"
+        END IF
+        IF NOT es_entero(m) THEN
+            THROW TypeError "m must be an integer"
+        END IF
+        IF m < 0 THEN
+            RETURN - _multiplicacion_recursiva(n, -m)
+        END IF
+        RETURN _multiplicacion_recursiva(n, m)
+    CATCH TypeError AS error
+        PRINT "[ERROR] multiplicacion_recursiva: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] multiplicacion_recursiva: m is too large"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 5. division_entera_recursiva(dividendo, divisor)
+-------------------------------------------------------------------------------
+ INPUT          : dividendo = integer, divisor = integer different from 0
+ OUTPUT         : an integer, or NULL if the input is invalid
+ BASE CASE      : dividendo - divisor < 0
+ RECURSIVE CASE : _division_entera_recursiva(dividendo - divisor, divisor) + 1
+
+ROUTINE _division_entera_recursiva(dividendo, divisor)
+    IF dividendo - divisor < 0 THEN
+        RETURN 0
+    ELSE
+        RETURN _division_entera_recursiva(dividendo - divisor, divisor) + 1
+    END IF
+END ROUTINE
+
+ROUTINE division_entera_recursiva(dividendo, divisor)
+    TRY
+        IF NOT es_entero(dividendo) THEN
+            THROW TypeError "dividendo must be an integer"
+        END IF
+        IF NOT es_entero(divisor) THEN
+            THROW TypeError "divisor must be an integer"
+        END IF
+        IF divisor = 0 THEN
+            THROW ZeroDivisionError "cannot divide by zero"
+        END IF
+        negativo <- (dividendo < 0) DIFFERENT FROM (divisor < 0)
+        cociente <- _division_entera_recursiva(|dividendo|, |divisor|)
+        IF negativo THEN
+            RETURN -cociente
+        ELSE
+            RETURN cociente
+        END IF
+    CATCH TypeError OR ZeroDivisionError AS error
+        PRINT "[ERROR] division_entera_recursiva: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] division_entera_recursiva: quotient too large"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 6. potencia_recursiva(base, exponente)
+-------------------------------------------------------------------------------
+ INPUT          : base = any number, exponente = integer
+ OUTPUT         : a number, or NULL if the input is invalid
+ BASE CASE      : exponente = 0
+ RECURSIVE CASE : _potencia_recursiva(base, exponente - 1) * base
+
+ROUTINE _potencia_recursiva(base, exponente)
+    IF exponente = 0 THEN
+        RETURN 1
+    ELSE
+        RETURN _potencia_recursiva(base, exponente - 1) * base
+    END IF
+END ROUTINE
+
+ROUTINE potencia_recursiva(base, exponente)
+    TRY
+        IF NOT es_numero(base) THEN
+            THROW TypeError "base must be a number"
+        END IF
+        IF NOT es_entero(exponente) THEN
+            THROW TypeError "exponente must be an integer"
+        END IF
+        IF exponente < 0 THEN
+            IF base = 0 THEN
+                THROW ZeroDivisionError "0 to a negative power is undefined"
+            END IF
+            RETURN 1 / _potencia_recursiva(base, -exponente)
+        END IF
+        RETURN _potencia_recursiva(base, exponente)
+    CATCH TypeError OR ZeroDivisionError AS error
+        PRINT "[ERROR] potencia_recursiva: " + error
+        RETURN NULL
+    CATCH RecursionError OR OverflowError
+        PRINT "[ERROR] potencia_recursiva: exponent or result too large"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 7. serie_collatz(n)
+-------------------------------------------------------------------------------
+ INPUT          : n = integer >= 1
+ OUTPUT         : 0 when it finishes, or NULL if the input is invalid
+ BASE CASE      : n = 1
+ RECURSIVE CASE : n even -> _serie_collatz(n / 2)
+                  n odd  -> _serie_collatz(3n + 1)
+
+ROUTINE _serie_collatz(n)
+    IF n = 1 THEN
+        PRINT "END!"
+        RETURN 0
+    ELSE
+        IF n MOD 2 = 0 THEN
+            PRINT n / 2
+            RETURN _serie_collatz(n / 2)
+        ELSE
+            PRINT 3 * n + 1
+            RETURN _serie_collatz(3 * n + 1)
+        END IF
+    END IF
+END ROUTINE
+
+ROUTINE serie_collatz(n)
+    TRY
+        IF NOT es_entero(n) THEN
+            THROW TypeError "n must be an integer"
+        END IF
+        IF n < 1 THEN
+            THROW ValueError "n must be >= 1"
+        END IF
+        RETURN _serie_collatz(n)
+    CATCH TypeError OR ValueError AS error
+        PRINT "[ERROR] serie_collatz: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] serie_collatz: recursion limit reached"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 8. aplanar_json(diccionario, clave_padre, separador)
+-------------------------------------------------------------------------------
+ INPUT          : a dictionary or a list, a parent key and a separator
+ OUTPUT         : a flat dictionary, or NULL if the input is invalid
+ BASE CASE      : the value is neither a dictionary nor a list
+ RECURSIVE CASE : _aplanar_json(value, nueva_llave, separador, elementos)
+
+ROUTINE _guardar(elementos, clave, valor)
+    IF clave already exists in elementos THEN
+        contador <- 2
+        WHILE clave + "#" + contador already exists in elementos
+            contador <- contador + 1
+        END WHILE
+        PRINT "[WARNING] key collision on clave"
+        clave <- clave + "#" + contador
+    END IF
+    elementos[clave] <- valor
+END ROUTINE
+
+ROUTINE _aplanar_json(estructura, clave_padre, separador, elementos)
+    IF estructura is a dictionary THEN
+        pares <- the (key, value) pairs of estructura
+    ELSE IF estructura is a list THEN
+        pares <- the (index, value) pairs of estructura
+    ELSE
+        CALL _guardar(elementos, clave_padre, estructura)
+        RETURN elementos
+    END IF
+
+    FOR EACH (clave, valor) IN pares
+        IF clave_padre is empty THEN
+            nueva_llave <- clave
+        ELSE
+            nueva_llave <- clave_padre + separador + clave
+        END IF
+
+        IF valor is a dictionary OR valor is a list THEN
+            CALL _aplanar_json(valor, nueva_llave, separador, elementos)
+        ELSE
+            CALL _guardar(elementos, nueva_llave, valor)
+        END IF
+    END FOR
+    RETURN elementos
+END ROUTINE
+
+ROUTINE aplanar_json(diccionario, clave_padre = "", separador = ".")
+    TRY
+        IF diccionario is NOT a dictionary AND is NOT a list THEN
+            THROW TypeError "a dict or a list was expected"
+        END IF
+        IF clave_padre is not a text THEN
+            THROW TypeError "clave_padre must be a text"
+        END IF
+        IF separador is not a non empty text THEN
+            THROW TypeError "separador must be a non empty text"
+        END IF
+        RETURN _aplanar_json(diccionario, clave_padre, separador,
+                             empty dictionary)
+    CATCH TypeError AS error
+        PRINT "[ERROR] aplanar_json: " + error
+        RETURN NULL
+    CATCH RecursionError
+        PRINT "[ERROR] aplanar_json: structure nested too deeply"
+        RETURN NULL
+    END TRY
+END ROUTINE
+
+
+-------------------------------------------------------------------------------
+ 9. main()
+-------------------------------------------------------------------------------
+
+ROUTINE main()
+    FOR EACH function of the practice
+        PRINT the section title
+        CALL the function with its valid inputs and show the result
+        CALL the function with its invalid inputs and show that it returns
+             NULL after printing an [ERROR] message
+    END FOR
+    PRINT "PROGRAM FINISHED WITHOUT CRASHING"
+END ROUTINE
+
+IF this file is being executed directly THEN
+    CALL main()
+END IF
+
+===============================================================================
