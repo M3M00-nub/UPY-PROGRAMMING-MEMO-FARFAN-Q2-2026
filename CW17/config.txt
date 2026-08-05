@@ -1,0 +1,6 @@
+width=800
+height=600
+vertical_lines=5
+space=0.2
+bg_color=0,0,0
+line_color=255,255,255
